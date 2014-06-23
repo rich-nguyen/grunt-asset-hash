@@ -35,7 +35,8 @@ grunt.initConfig({
       files: [
         { src:  ['assets/**/*'],  // A collection of assets to be hashed.
           dest: 'hashed'          // A folder to contained the hashed assets. Cannot be a file,
-                                  // so it's incompatible with 'expand' and 'cwd' grunt properties. 
+                                  // so it's incompatible with 'expand' and 'cwd' grunt properties.
+        }
       ]
     },
   },
