@@ -83,7 +83,7 @@ module.exports = function(grunt) {
 
               //grunt.log.writeln('path mapping: ' + filepath + " to " + hashedPath);
               copyFile(filepath, f.dest, hexFolderName);
-            })
+            });
         } else {
           copyFile(filepath, f.dest, '');
         }
@@ -94,11 +94,11 @@ module.exports = function(grunt) {
     function copyFile(assetPath, dest, hexFolder) {
 
       var hashDir = path.join(dest, path.dirname(assetPath), hexFolder);
-
       // Copy the asset file to the hashed folder and store the mapping.
       var destPath = path.join(hashDir, path.basename(assetPath));
       grunt.file.copy(assetPath, destPath);
       assetFileMapping[assetPath] = destPath;
+      grunt.log.writeln('Copied asset: ' + destPath);
 
       // Copy the source map file to the same hashed folder.
       var sourceMapPath = sourceMaps[assetPath];
@@ -106,6 +106,7 @@ module.exports = function(grunt) {
         var destSourceMapPath = path.join(hashDir, path.basename(sourceMapPath));
         grunt.file.copy(sourceMapPath, destSourceMapPath);
         sourceFileMapping[sourceMapPath] = destSourceMapPath;
+        grunt.log.writeln('Copied source map: ' + destSourceMapPath);
       } 
 
       if (Object.keys(assetFileMapping).length === numSourceFiles) {
@@ -130,7 +131,7 @@ module.exports = function(grunt) {
       var sortedMapping = {};
       var sortedAssets = Object.keys(fullMapping).sort();
       sortedAssets.forEach(function(asset) {
-        sortedMapping[asset] = fullMapping[asset];
+        sortedMapping[asset] = fullMapping[asset];        
       });
 
       grunt.file.write(options.assetMap, JSON.stringify(sortedMapping, null, 2));

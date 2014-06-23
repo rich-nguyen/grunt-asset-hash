@@ -25,14 +25,14 @@ module.exports = function(grunt) {
 
     // Before generating any new files, remove any previously-created files.
     clean: {
-      tests: ['tmp']
+      tests: ['tmp','assetmap.json']
     },
 
     // Configuration to be run (and then tested).
     asset_hash: {
       default_options: {
         files: [
-          {src: ['fixtures/**/*'], dest: 'tmp/default_options', cwd: 'test', expand: true}
+          {src: ['test/fixtures/**/*'], dest: 'tmp/default_options'}
         ]
       },
       source_mapped: {
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
           hashLength: 16
         },
         files: [
-          {src: ['fixtures/**/*'], dest: 'tmp/source_mapped', cwd: 'test', expand: true}
+          {src: ['test/fixtures/**/*'], dest: 'tmp/source_mapped'}
         ]
       },
       no_hash: {
@@ -52,7 +52,7 @@ module.exports = function(grunt) {
           hashLength: 0
         },
         files: [
-          {src: ['fixtures/**/*'], dest: 'tmp/no_hash', cwd: 'test', expand: true}
+          {src: ['test/fixtures/**/*'], dest: 'tmp/no_hash'}
         ]
       }
     },

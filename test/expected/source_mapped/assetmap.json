@@ -1,0 +1,7 @@
+{
+  "test/fixtures/123": "tmp/source_mapped/test/fixtures/5ba48b6e5a7c4d49/123",
+  "test/fixtures/test.css": "tmp/source_mapped/test/fixtures/279d97c58278ae03/test.css",
+  "test/fixtures/test.css.map": "tmp/source_mapped/test/fixtures/279d97c58278ae03/test.css.map",
+  "test/fixtures/testing.js": "tmp/source_mapped/test/fixtures/fa6a5a3224d7da66/testing.js",
+  "test/fixtures/testing.js.map": "tmp/source_mapped/test/fixtures/fa6a5a3224d7da66/testing.js.map"
+}

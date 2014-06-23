@@ -1,0 +1,7 @@
+{
+  "test/fixtures/123": "tmp/no_hash/test/fixtures/123",
+  "test/fixtures/test.css": "tmp/no_hash/test/fixtures/test.css",
+  "test/fixtures/test.css.map": "tmp/no_hash/test/fixtures/test.css.map",
+  "test/fixtures/testing.js": "tmp/no_hash/test/fixtures/testing.js",
+  "test/fixtures/testing.js.map": "tmp/no_hash/test/fixtures/testing.js.map"
+}

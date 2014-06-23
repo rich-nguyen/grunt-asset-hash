@@ -1,6 +1,7 @@
 'use strict';
 
 var grunt = require('grunt');
+var fs = require('fs');
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -28,21 +29,48 @@ exports.asset_hash = {
     done();
   },
   default_options: function(test) {
-    test.expect(1);
+    test.expect(6);
 
-    var actual = grunt.file.read('tmp/default_options');
-    var expected = grunt.file.read('test/expected/default_options');
-    test.equal(actual, expected, 'should describe what the default behavior is.');
+    var actual = grunt.file.read('assetmap.json');
+    var expected = grunt.file.read('test/expected/default_options/assetmap.json');
+    test.equal(actual, expected, 'should contain a valid asset map.');
 
-    test.done();
-  },
-  custom_options: function(test) {
-    test.expect(1);
-
-    var actual = grunt.file.read('tmp/custom_options');
-    var expected = grunt.file.read('test/expected/custom_options');
-    test.equal(actual, expected, 'should describe what the custom option(s) behavior is.');
+    test.ok(fs.existsSync('tmp/default_options/test/fixtures/5ba48b6e5a7c4d4930fda256f411e55b/123'));
+    test.ok(fs.existsSync('tmp/default_options/test/fixtures/279d97c58278ae0309eb0cf24cbeef67/test.css'));
+    test.ok(fs.existsSync('tmp/default_options/test/fixtures/6be91bfc401452c6157e67fff0e1b9db/test.css.map'));
+    test.ok(fs.existsSync('tmp/default_options/test/fixtures/fa6a5a3224d7da66d9e0bdec25f62cf0/testing.js'));
+    test.ok(fs.existsSync('tmp/default_options/test/fixtures/2a440ce824809f040dfe6de7bc6099f1/testing.js.map'));
 
     test.done();
   },
+  source_mapped: function(test) {
+    test.expect(6);
+
+    var actual = grunt.file.read('tmp/source_mapped/test-assetmap.json');
+    var expected = grunt.file.read('test/expected/source_mapped/assetmap.json');
+    test.equal(actual, expected, 'should contain a valid asset map.');
+
+    test.ok(fs.existsSync('tmp/source_mapped/test/fixtures/5ba48b6e5a7c4d49/123'));
+    test.ok(fs.existsSync('tmp/source_mapped/test/fixtures/279d97c58278ae03/test.css'));
+    test.ok(fs.existsSync('tmp/source_mapped/test/fixtures/279d97c58278ae03/test.css.map'));
+    test.ok(fs.existsSync('tmp/source_mapped/test/fixtures/fa6a5a3224d7da66/testing.js'));
+    test.ok(fs.existsSync('tmp/source_mapped/test/fixtures/fa6a5a3224d7da66/testing.js.map'));
+
+    test.done();
+  },
+  no_hash: function(test) {
+    test.expect(6);
+
+    var actual = grunt.file.read('tmp/no_hash/test-assetmap.json');
+    var expected = grunt.file.read('test/expected/no_hash/assetmap.json');
+    test.equal(actual, expected, 'should contain a valid asset map.');
+
+    test.ok(fs.existsSync('tmp/no_hash/test/fixtures/123'));
+    test.ok(fs.existsSync('tmp/no_hash/test/fixtures/test.css'));
+    test.ok(fs.existsSync('tmp/no_hash/test/fixtures/test.css.map'));
+    test.ok(fs.existsSync('tmp/no_hash/test/fixtures/testing.js'));
+    test.ok(fs.existsSync('tmp/no_hash/test/fixtures/testing.js.map'));
+
+    test.done();
+  }
 };
