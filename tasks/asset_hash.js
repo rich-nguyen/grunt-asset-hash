@@ -81,7 +81,6 @@ module.exports = function(grunt) {
               // Create a 32-hex digest and insert it into the path.
               var hexFolderName = hash.digest('hex').slice(0, options.hashLength);            
 
-              //grunt.log.writeln('path mapping: ' + filepath + " to " + hashedPath);
               copyFile(filepath, f.dest, hexFolderName);
             });
         } else {
