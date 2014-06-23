@@ -31,26 +31,35 @@ module.exports = function(grunt) {
     // Configuration to be run (and then tested).
     asset_hash: {
       default_options: {
-        options: {
-        },
-        files: {
-          'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123']
-        }
+        files: [
+          {src: ['fixtures/**/*'], dest: 'tmp/default_options', cwd: 'test', expand: true}
+        ]
       },
-      custom_options: {
+      source_mapped: {
         options: {
-          separator: ': ',
-          punctuation: ' !!!'
+          preserveSourceMaps: true,
+          assetMap: 'tmp/source_mapped/test-assetmap.json',
+          hashLength: 16
         },
-        files: {
-          'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123']
-        }
+        files: [
+          {src: ['fixtures/**/*'], dest: 'tmp/source_mapped', cwd: 'test', expand: true}
+        ]
+      },
+      no_hash: {
+        options: {
+          preserveSourceMaps: true,
+          assetMap: 'tmp/no_hash/test-assetmap.json',
+          hashLength: 0
+        },
+        files: [
+          {src: ['fixtures/**/*'], dest: 'tmp/no_hash', cwd: 'test', expand: true}
+        ]
       }
     },
 
     // Unit tests.
     nodeunit: {
-      tests: ['test/*_test.js']
+      tests: ['test/asset_hash_test.js']
     }
 
   });
