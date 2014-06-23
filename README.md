@@ -25,58 +25,18 @@ In your project's Gruntfile, add a section named `asset_hash` to the data object
 ```js
 grunt.initConfig({
   asset_hash: {
-    options: {
-      // Task-specific options go here.
+    options: {      
+      preserveSourceMaps: false,  // Set to true when assets should share the same location as their source map. 
+      assetMap: 'assetmap.json',  // A mapping file between assets and their hashed locations.
+      hashLength: 32,             // Number of hex characters in the hash folder. (0 means no hashing is done).
+      algorithm: 'md5'            // Crypto algorithm used to hash the contents.
     },
     your_target: {
-      // Target-specific file lists and/or options go here.
-    },
-  },
-});
-```
-
-### Options
-
-#### options.separator
-Type: `String`
-Default value: `',  '`
-
-A string value that is used to do something with whatever.
-
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
-
-A string value that is used to do something else with whatever else.
-
-### Usage Examples
-
-#### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
-
-```js
-grunt.initConfig({
-  asset_hash: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
-```
-
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
-
-```js
-grunt.initConfig({
-  asset_hash: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
+      files: [
+        { src:  ['assets/**/*'],  // A collection of assets to be hashed.
+          dest: 'hashed'          // A folder to contained the hashed assets. Cannot be a file,
+                                  // so it's incompatible with 'expand' and 'cwd' grunt properties. 
+      ]
     },
   },
 });
