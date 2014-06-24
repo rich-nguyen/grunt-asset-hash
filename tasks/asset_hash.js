@@ -22,7 +22,9 @@ module.exports = function(grunt) {
       preserveSourceMaps: false,
       assetMap: 'assetmap.json',
       hashLength: 32,
-      algorithm: 'md5'
+      algorithm: 'md5',
+      srcBasePath: '',
+      destBasePath: ''
     });
 
     var assetFileMapping = {},
@@ -92,19 +94,25 @@ module.exports = function(grunt) {
     // Copy and log the file to the output location, and signal done() when the last copy is done.
     function copyFile(assetPath, dest, hexFolder) {
 
-      var hashDir = path.join(dest, path.dirname(assetPath), hexFolder);
       // Copy the asset file to the hashed folder and store the mapping.
-      var destPath = path.join(hashDir, path.basename(assetPath));
+      var relativeAssetPath = stripPrefix(assetPath, options.srcBasePath),
+          hashDir  = path.join(dest, path.dirname(relativeAssetPath), hexFolder),      
+          destPath = path.join(hashDir, path.basename(assetPath)),
+          relativeDestPath = stripPrefix(destPath, options.destBasePath);
+
       grunt.file.copy(assetPath, destPath);
-      assetFileMapping[assetPath] = destPath;
+      assetFileMapping[relativeAssetPath] = relativeDestPath;
       grunt.log.writeln('Copied asset: ' + destPath);
 
       // Copy the source map file to the same hashed folder.
       var sourceMapPath = sourceMaps[assetPath];
       if (sourceMapPath) {
-        var destSourceMapPath = path.join(hashDir, path.basename(sourceMapPath));
+        var destSourceMapPath = path.join(hashDir, path.basename(sourceMapPath)),
+            relativeSourceMapPath = stripPrefix(sourceMapPath, options.srcBasePath),
+            relativeDestSourceMapPath = stripPrefix(destSourceMapPath, options.destBasePath);
+
         grunt.file.copy(sourceMapPath, destSourceMapPath);
-        sourceFileMapping[sourceMapPath] = destSourceMapPath;
+        sourceFileMapping[relativeSourceMapPath] = relativeDestSourceMapPath;
         grunt.log.writeln('Copied source map: ' + destSourceMapPath);
       } 
 
@@ -112,6 +120,10 @@ module.exports = function(grunt) {
         writeMappingFile();
         done();
       }
+    }
+
+    function stripPrefix(input, prefix) {
+      return input.replace( new RegExp('^' + prefix), '');
     }
 
     // Tests whether the filepath looks like a css or js source map.

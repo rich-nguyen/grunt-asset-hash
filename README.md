@@ -29,13 +29,14 @@ grunt.initConfig({
       preserveSourceMaps: false,  // Set to true when assets should share the same location as their source map. 
       assetMap: 'assetmap.json',  // A mapping file between assets and their hashed locations.
       hashLength: 32,             // Number of hex characters in the hash folder. (0 means no hashing is done).
-      algorithm: 'md5'            // Crypto algorithm used to hash the contents.
+      algorithm: 'md5',           // Crypto algorithm used to hash the contents.
+      srcBasePath: '',            // The directory prefix to be stripped from the asset map src paths.
+      destBasePath: ''            // The directory prefix to be stripped from the asset map dest paths.
     },
     your_target: {
       files: [
         { src:  ['assets/**/*'],  // A collection of assets to be hashed.
-          dest: 'hashed'          // A folder to contained the hashed assets. Cannot be a file,
-                                  // so it's incompatible with 'expand' and 'cwd' grunt properties.
+          dest: 'hashed'          // A folder to contained the hashed assets. Cannot be a file.
         }
       ]
     },

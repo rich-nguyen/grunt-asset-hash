@@ -72,5 +72,20 @@ exports.asset_hash = {
     test.ok(fs.existsSync('tmp/no_hash/test/fixtures/testing.js.map'));
 
     test.done();
+  },
+  asset_hash: function(test) {
+    test.expect(6);
+
+    var actual = grunt.file.read('tmp/base_paths/test-assetmap.json');
+    var expected = grunt.file.read('test/expected/base_paths/assetmap.json');
+    test.equal(actual, expected, 'should contain a valid asset map with base paths removed.');
+
+    test.ok(fs.existsSync('tmp/base_paths/fixtures/5ba48b6e5a7c4d49/123'));
+    test.ok(fs.existsSync('tmp/base_paths/fixtures/279d97c58278ae03/test.css'));
+    test.ok(fs.existsSync('tmp/base_paths/fixtures/279d97c58278ae03/test.css.map'));
+    test.ok(fs.existsSync('tmp/base_paths/fixtures/fa6a5a3224d7da66/testing.js'));
+    test.ok(fs.existsSync('tmp/base_paths/fixtures/fa6a5a3224d7da66/testing.js.map'));
+
+    test.done();
   }
 };

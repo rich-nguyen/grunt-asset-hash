@@ -54,6 +54,18 @@ module.exports = function(grunt) {
         files: [
           {src: ['test/fixtures/**/*'], dest: 'tmp/no_hash'}
         ]
+      },
+      base_paths: {
+        options: {
+          assetMap: 'tmp/base_paths/test-assetmap.json',
+          preserveSourceMaps: true,
+          srcBasePath: 'test/',
+          destBasePath: 'tmp/base_paths/',
+          hashLength: 16
+        },
+        files: [
+          {src: 'test/fixtures/**/*', dest: 'tmp/base_paths/'}
+        ]
       }
     },
 
