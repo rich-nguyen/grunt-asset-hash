@@ -48,6 +48,6 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
- * 2014-06-24   v0.1.2   Support paths which are not normalised.
+ * 2014-06-24   v0.1.3   Support paths which are not normalised.
  * 2014-06-24   v0.1.1   Add options to strip base paths from final folder structure and asset map.
  * 2014-06-23   v0.1.0   Initial version.
