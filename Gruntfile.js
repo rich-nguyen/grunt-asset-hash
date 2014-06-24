@@ -64,7 +64,7 @@ module.exports = function(grunt) {
           hashLength: 16
         },
         files: [
-          {src: 'test/fixtures/**/*', dest: 'tmp/base_paths/'}
+          {src: './test/fixtures/**/*', dest: 'tmp/base_paths/'}
         ]
       }
     },

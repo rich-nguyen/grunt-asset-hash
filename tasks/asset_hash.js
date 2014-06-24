@@ -95,10 +95,10 @@ module.exports = function(grunt) {
     function copyFile(assetPath, dest, hexFolder) {
 
       // Copy the asset file to the hashed folder and store the mapping.
-      var relativeAssetPath = stripPrefix(assetPath, options.srcBasePath),
+      var relativeAssetPath = stripPrefixAndNormalise(assetPath, options.srcBasePath),
           hashDir  = path.join(dest, path.dirname(relativeAssetPath), hexFolder),      
           destPath = path.join(hashDir, path.basename(assetPath)),
-          relativeDestPath = stripPrefix(destPath, options.destBasePath);
+          relativeDestPath = stripPrefixAndNormalise(destPath, options.destBasePath);
 
       grunt.file.copy(assetPath, destPath);
       assetFileMapping[relativeAssetPath] = relativeDestPath;
@@ -108,8 +108,8 @@ module.exports = function(grunt) {
       var sourceMapPath = sourceMaps[assetPath];
       if (sourceMapPath) {
         var destSourceMapPath = path.join(hashDir, path.basename(sourceMapPath)),
-            relativeSourceMapPath = stripPrefix(sourceMapPath, options.srcBasePath),
-            relativeDestSourceMapPath = stripPrefix(destSourceMapPath, options.destBasePath);
+            relativeSourceMapPath = stripPrefixAndNormalise(sourceMapPath, options.srcBasePath),
+            relativeDestSourceMapPath = stripPrefixAndNormalise(destSourceMapPath, options.destBasePath);
 
         grunt.file.copy(sourceMapPath, destSourceMapPath);
         sourceFileMapping[relativeSourceMapPath] = relativeDestSourceMapPath;
@@ -122,13 +122,13 @@ module.exports = function(grunt) {
       }
     }
 
-    function stripPrefix(input, prefix) {
-      return input.replace( new RegExp('^' + prefix), '');
+    function stripPrefixAndNormalise(input, prefix) {
+      return path.normalize(input).replace( new RegExp('^' + prefix), '');
     }
 
     // Tests whether the filepath looks like a css or js source map.
     function isSourceMap(filepath) {
-      return grunt.file.isMatch(['**/*.js.map', '**/*.css.map'], filepath);
+      return grunt.file.isMatch(['**/*.js.map', '**/*.css.map'], path.normalize(filepath));
     }
 
     // Write the accompanying json file that maps non-hashed assets to their hashed locations.
