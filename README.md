@@ -25,13 +25,14 @@ In your project's Gruntfile, add a section named `asset_hash` to the data object
 ```js
 grunt.initConfig({
   asset_hash: {
-    options: {      
-      preserveSourceMaps: false,  // Set to true when assets should share the same location as their source map. 
+    options: {
+      preserveSourceMaps: false,  // Set to true when assets should share the same location as their source map.
       assetMap: 'assetmap.json',  // A mapping file between assets and their hashed locations.
       hashLength: 32,             // Number of hex characters in the hash folder. (0 means no hashing is done).
       algorithm: 'md5',           // Crypto algorithm used to hash the contents.
       srcBasePath: '',            // The directory prefix to be stripped from the asset map src paths.
-      destBasePath: ''            // The directory prefix to be stripped from the asset map dest paths.
+      destBasePath: '',           // The directory prefix to be stripped from the asset map dest paths.
+      hashType: 'folder'          // Defaults to `/$HASH/filename.ext`, but `'file'` will output `'filename.$HASH.ext'`.
     },
     your_target: {
       files: [
@@ -48,6 +49,7 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+ * 2014-07-29   v0.1.4   Allow hashing in filenames rather than folder names
  * 2014-06-24   v0.1.3   Support paths which are not normalised.
  * 2014-06-24   v0.1.1   Add options to strip base paths from final folder structure and asset map.
  * 2014-06-23   v0.1.0   Initial version.
