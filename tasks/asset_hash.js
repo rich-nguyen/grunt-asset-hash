@@ -154,8 +154,10 @@ module.exports = function(grunt) {
         sortedMapping[asset] = fullMapping[asset];
       });
 
-      grunt.file.write(options.assetMap, JSON.stringify(sortedMapping, null, 2));
-      grunt.log.oklns('Asset map saved as ' + options.assetMap);
+      if (options.assetMap) {
+        grunt.file.write(options.assetMap, JSON.stringify(sortedMapping, null, 2));
+        grunt.log.oklns('Asset map saved as ' + options.assetMap);
+      }
     }
 
     // Copy object properties to another object.
