@@ -87,5 +87,21 @@ exports.asset_hash = {
     test.ok(fs.existsSync('tmp/base_paths/fixtures/fa6a5a3224d7da66/testing.js.map'));
 
     test.done();
+  },
+  rename_files: function(test) {
+    test.expect(6);
+
+    var actual = grunt.file.read('tmp/rename_files/test-assetmap.json');
+    var expected = grunt.file.read('test/expected/rename_files/assetmap.json');
+    test.equal(actual, expected, 'should contain a valid asset map.');
+
+    test.ok(fs.existsSync('tmp/rename_files/test/fixtures/123.5ba48b6e5a7c4d4930fda256f411e55b'));
+    test.ok(fs.existsSync('tmp/rename_files/test/fixtures/test.279d97c58278ae0309eb0cf24cbeef67.css'));
+    test.ok(fs.existsSync('tmp/rename_files/test/fixtures/test.css.6be91bfc401452c6157e67fff0e1b9db.map'));
+    test.ok(fs.existsSync('tmp/rename_files/test/fixtures/testing.fa6a5a3224d7da66d9e0bdec25f62cf0.js'));
+    test.ok(fs.existsSync('tmp/rename_files/test/fixtures/testing.js.2a440ce824809f040dfe6de7bc6099f1.map'));
+
+    test.done();
   }
+
 };

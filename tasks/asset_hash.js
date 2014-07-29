@@ -18,11 +18,12 @@ module.exports = function(grunt) {
 
   grunt.registerMultiTask('asset_hash', 'Create a folder of asset files that include hashes', function() {
     // Merge task-specific and/or target-specific options with these defaults.
-    var options = this.options({      
+    var options = this.options({
       preserveSourceMaps: false,
       assetMap: 'assetmap.json',
       hashLength: 32,
       algorithm: 'md5',
+      hashType: 'folder',
       srcBasePath: '',
       destBasePath: ''
     });
@@ -37,8 +38,8 @@ module.exports = function(grunt) {
 
     // Iterate over all specified file groups.
     this.files.forEach(function(f) {
-      
-      // Check that the destination is a directory.    
+
+      // Check that the destination is a directory.
       var dest = f.dest;
 
       if (grunt.file.isFile(dest)) {
@@ -46,12 +47,12 @@ module.exports = function(grunt) {
         done();
         return;
       }
-      
+
       var src = f.src.filter(function(filepath) {
         // Do not copy source maps if they should be preserved.
         if (options.preserveSourceMaps && isSourceMap(filepath)) {
           // Strip '.map' extension.
-          var minifiedFile = filepath.slice(0, -4);          
+          var minifiedFile = filepath.slice(0, -4);
           sourceMaps[minifiedFile] = filepath;
           return false;
         }
@@ -76,12 +77,12 @@ module.exports = function(grunt) {
           var hash = crypto.createHash(options.algorithm);
           var stream = fs.createReadStream(filepath);
           stream
-            .on('data', function(data) {            
+            .on('data', function(data) {
               hash.update(data);
             })
             .on('end', function() {
               // Create a 32-hex digest and insert it into the path.
-              var hexFolderName = hash.digest('hex').slice(0, options.hashLength);            
+              var hexFolderName = hash.digest('hex').slice(0, options.hashLength);
 
               copyFile(filepath, f.dest, hexFolderName);
             });
@@ -90,19 +91,27 @@ module.exports = function(grunt) {
         }
       });
     });
-    
+
     // Copy and log the file to the output location, and signal done() when the last copy is done.
     function copyFile(assetPath, dest, hexFolder) {
 
       // Copy the asset file to the hashed folder and store the mapping.
       var relativeAssetPath = stripPrefixAndNormalise(assetPath, options.srcBasePath),
-          hashDir  = path.join(dest, path.dirname(relativeAssetPath), hexFolder),      
-          destPath = path.join(hashDir, path.basename(assetPath)),
-          relativeDestPath = stripPrefixAndNormalise(destPath, options.destBasePath);
+          hashDir  = path.join(dest, path.dirname(relativeAssetPath), hexFolder),
+          destPath = path.join(hashDir, path.basename(assetPath));
+
+      if (options.hashType === 'file') {
+        var ext = path.extname(assetPath),
+            hashedFilename = path.basename(assetPath, ext) + '.' + hexFolder + ext;
+        hashDir  = path.join(dest, path.dirname(relativeAssetPath));
+        destPath = path.join(hashDir, hashedFilename);
+      }
+
+      var relativeDestPath = stripPrefixAndNormalise(destPath, options.destBasePath);
 
       grunt.file.copy(assetPath, destPath);
       assetFileMapping[relativeAssetPath] = relativeDestPath;
-      grunt.log.writeln('Copied asset: ' + destPath);
+      grunt.log.writeln('Copied asset: ' + assetPath + ' -> ' + destPath);
 
       // Copy the source map file to the same hashed folder.
       var sourceMapPath = sourceMaps[assetPath];
@@ -114,7 +123,7 @@ module.exports = function(grunt) {
         grunt.file.copy(sourceMapPath, destSourceMapPath);
         sourceFileMapping[relativeSourceMapPath] = relativeDestSourceMapPath;
         grunt.log.writeln('Copied source map: ' + destSourceMapPath);
-      } 
+      }
 
       if (Object.keys(assetFileMapping).length === numSourceFiles) {
         writeMappingFile();
@@ -142,7 +151,7 @@ module.exports = function(grunt) {
       var sortedMapping = {};
       var sortedAssets = Object.keys(fullMapping).sort();
       sortedAssets.forEach(function(asset) {
-        sortedMapping[asset] = fullMapping[asset];        
+        sortedMapping[asset] = fullMapping[asset];
       });
 
       grunt.file.write(options.assetMap, JSON.stringify(sortedMapping, null, 2));
