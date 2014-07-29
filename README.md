@@ -32,7 +32,7 @@ grunt.initConfig({
       algorithm: 'md5',           // Crypto algorithm used to hash the contents.
       srcBasePath: '',            // The directory prefix to be stripped from the asset map src paths.
       destBasePath: '',           // The directory prefix to be stripped from the asset map dest paths.
-      hashType: 'folder'          // Defaults to `/$HASH/filename.ext`, but `'file'` will output `'filename.$HASH.ext'`.
+      hashType: 'folder'          // Defaults to `/$HASH/filename.ext`, but `'file'` will output `filename.$HASH.ext`.
     },
     your_target: {
       files: [
