@@ -32,7 +32,8 @@ grunt.initConfig({
       algorithm: 'md5',           // Crypto algorithm used to hash the contents.
       srcBasePath: '',            // The directory prefix to be stripped from the asset map src paths.
       destBasePath: '',           // The directory prefix to be stripped from the asset map dest paths.
-      hashType: 'folder'          // Defaults to `/$HASH/filename.ext`, but `'file'` will output `filename.$HASH.ext`.
+      hashType: 'folder',         // Defaults to `/$HASH/filename.ext`, but `'file'` will output `filename.$HASH.ext`.
+      references: []              // Files to replace references in (eg. a CSS file where `image.png` should become `image.$HASH.png`)
     },
     your_target: {
       files: [
@@ -49,6 +50,7 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+ * 2014-08-19   v0.1.6   Add a reference option to replace file paths (eg. in CSS) with hashed versions
  * 2014-07-29   v0.1.5   Make asset map generation optional.
  * 2014-07-29   v0.1.4   Allow hashing in filenames rather than folder names
  * 2014-06-24   v0.1.3   Support paths which are not normalised.
