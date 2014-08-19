@@ -3,6 +3,7 @@
  * https://github.com/rich-nguyen/grunt-asset-hash
  *
  * Based on the hashmap plugin by ktmud https://github.com/ktmud/grunt-hashmap/blob/master/tasks/hashmap.js
+ * Also uses portions of grunt-ver https://github.com/chrisdanford/grunt-ver for replacing paths in CSS etc
  *
  * Copyright (c) 2014 Richard Nguyen
  * Licensed under the MIT license.
@@ -25,13 +26,15 @@ module.exports = function(grunt) {
       algorithm: 'md5',
       hashType: 'folder',
       srcBasePath: '',
-      destBasePath: ''
+      destBasePath: '',
+      references: []
     });
 
     var assetFileMapping = {},
         sourceFileMapping = {},
         sourceMaps = {},
-        numSourceFiles;
+        numSourceFiles,
+        renameInfos = [];
 
     // Force task into async mode and grab a handle to the "done" function.
     var done = this.async();
@@ -127,6 +130,7 @@ module.exports = function(grunt) {
 
       if (Object.keys(assetFileMapping).length === numSourceFiles) {
         writeMappingFile();
+        renameReferences();
         done();
       }
     }
@@ -151,6 +155,14 @@ module.exports = function(grunt) {
       var sortedMapping = {};
       var sortedAssets = Object.keys(fullMapping).sort();
       sortedAssets.forEach(function(asset) {
+        // track which assets were renamed
+        // for filename reference replacement
+        // (eg. in CSS files referencing renamed images)
+        renameInfos.push({
+          from: asset,
+          fromRegex: new RegExp('\\b' + asset + '\\b', 'g'),
+          to: fullMapping[asset]
+        });
         sortedMapping[asset] = fullMapping[asset];
       });
 
@@ -166,5 +178,39 @@ module.exports = function(grunt) {
         destObject[attribute] = srcObject[attribute];
       }
     }
+
+    function renameReferences() {
+      if (options.references) {
+        var totalReferences = 0;
+        var totalReferencingFiles = 0;
+        grunt.log.writeln('Replacing references.').writeflags(options.references);
+
+        grunt.file.expand({filter: 'isFile'}, options.references).sort().forEach(function(f) {
+          var content = grunt.file.read(f).toString();
+          var replacedToCount = {};
+
+          renameInfos.forEach(function(renameInfo) {
+            content = content.replace(renameInfo.fromRegex, function(match) {
+              if (match in replacedToCount) {
+                replacedToCount[match]++;
+              } else {
+                replacedToCount[match] = 1;
+              }
+              return renameInfo.to;
+            });
+          });
+
+          var replacedKeys = Object.keys(replacedToCount);
+          if (replacedKeys.length > 0) {
+            grunt.file.write(f, content);
+            grunt.verbose.write(f + ' ').ok('replaced: ' + replacedKeys.join(', '));
+            totalReferences++;
+          }
+          totalReferencingFiles++;
+        });
+        grunt.log.write('Replaced ' + totalReferences + ' in ' + totalReferencingFiles + ' files ').ok();
+      }
+    }
+
   });
 };
