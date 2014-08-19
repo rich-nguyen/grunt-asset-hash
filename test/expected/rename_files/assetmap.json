@@ -1,0 +1,7 @@
+{
+  "test/fixtures/123": "tmp/rename_files/test/fixtures/123.5ba48b6e5a7c4d4930fda256f411e55b",
+  "test/fixtures/test.css": "tmp/rename_files/test/fixtures/test.279d97c58278ae0309eb0cf24cbeef67.css",
+  "test/fixtures/test.css.map": "tmp/rename_files/test/fixtures/test.css.6be91bfc401452c6157e67fff0e1b9db.map",
+  "test/fixtures/testing.js": "tmp/rename_files/test/fixtures/testing.fa6a5a3224d7da66d9e0bdec25f62cf0.js",
+  "test/fixtures/testing.js.map": "tmp/rename_files/test/fixtures/testing.js.2a440ce824809f040dfe6de7bc6099f1.map"
+}
