@@ -33,7 +33,7 @@ grunt.initConfig({
       srcBasePath: '',            // The directory prefix to be stripped from the asset map src paths.
       destBasePath: '',           // The directory prefix to be stripped from the asset map dest paths.
       hashType: 'folder',         // Defaults to `/$HASH/filename.ext`, but `'file'` will output `filename.$HASH.ext`.
-      references: []              // Files to replace references in (eg. a CSS file where `image.png` should become `image.$HASH.png`")
+      references: []              // Files to replace references in (eg. a CSS file where `image.png` should become `image.$HASH.png`)
     },
     your_target: {
       files: [
