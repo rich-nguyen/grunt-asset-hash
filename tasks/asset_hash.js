@@ -14,6 +14,7 @@
 var fs = require('fs');
 var path = require('path');
 var crypto = require('crypto');
+var semaphore = require('semaphore');
 
 module.exports = function(grunt) {
 
@@ -27,7 +28,8 @@ module.exports = function(grunt) {
       hashType: 'folder',
       srcBasePath: '',
       destBasePath: '',
-      references: []
+      references: [],
+      concurrentReadCount: 250
     });
 
     var assetFileMapping = {},
@@ -74,24 +76,28 @@ module.exports = function(grunt) {
         done();
         return;
       }
+      var sem = semaphore(options.concurrentReadCount);
 
       src.forEach(function(filepath) {
-        if (options.hashLength) {
-          var hash = crypto.createHash(options.algorithm);
-          var stream = fs.createReadStream(filepath);
-          stream
-            .on('data', function(data) {
-              hash.update(data);
-            })
-            .on('end', function() {
-              // Create a 32-hex digest and insert it into the path.
-              var hexFolderName = hash.digest('hex').slice(0, options.hashLength);
-
-              copyFile(filepath, f.dest, hexFolderName);
-            });
-        } else {
-          copyFile(filepath, f.dest, '');
-        }
+        sem.take(function(){
+          if (options.hashLength) {
+            var hash = crypto.createHash(options.algorithm);
+            var stream = fs.createReadStream(filepath);
+            stream
+              .on('data', function(data) {
+                hash.update(data);
+              })
+              .on('end', function() {
+                // Create a 32-hex digest and insert it into the path.
+                var hexFolderName = hash.digest('hex').slice(0, options.hashLength);
+                copyFile(filepath, f.dest, hexFolderName);
+                sem.leave();
+              });
+          } else {
+            copyFile(filepath, f.dest, '');
+            sem.leave();
+          }
+        });
       });
     });
 

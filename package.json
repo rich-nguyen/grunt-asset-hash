@@ -41,5 +41,8 @@
     "static",
     "deploy",
     "assets"
-  ]
+  ],
+  "dependencies": {
+    "semaphore": "^1.0.3"
+  }
 }
