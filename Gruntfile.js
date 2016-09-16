@@ -76,6 +76,16 @@ module.exports = function(grunt) {
           {src: ['test/fixtures/**/*'], dest: 'tmp/rename_files'}
         ]
       },
+      rename_files_with_source_maps: {
+        options: {
+          assetMap: 'tmp/rename_files_with_source_maps/test-assetmap.json',
+          hashType: 'file',
+          preserveSourceMaps: true
+        },
+        files: [
+          {src: ['test/fixtures/**'], dest: 'tmp/rename_files_with_source_maps'}
+        ]
+      }
     },
 
     // Unit tests.
