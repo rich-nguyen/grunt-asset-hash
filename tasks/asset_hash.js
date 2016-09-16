@@ -100,14 +100,16 @@ module.exports = function(grunt) {
 
       // Copy the asset file to the hashed folder and store the mapping.
       var relativeAssetPath = stripPrefixAndNormalise(assetPath, options.srcBasePath),
-          hashDir  = path.join(dest, path.dirname(relativeAssetPath), hexFolder),
-          destPath = path.join(hashDir, path.basename(assetPath));
+          hashDir  = path.join(dest, path.dirname(relativeAssetPath)),
+          destPath;
 
       if (options.hashType === 'file') {
         var ext = path.extname(assetPath),
             hashedFilename = path.basename(assetPath, ext) + '.' + hexFolder + ext;
-        hashDir  = path.join(dest, path.dirname(relativeAssetPath));
         destPath = path.join(hashDir, hashedFilename);
+      } else {
+        hashDir  = path.join(hashDir, hexFolder),
+        destPath = path.join(hashDir, path.basename(assetPath));
       }
 
       var relativeDestPath = stripPrefixAndNormalise(destPath, options.destBasePath);
@@ -119,11 +121,18 @@ module.exports = function(grunt) {
       // Copy the source map file to the same hashed folder.
       var sourceMapPath = sourceMaps[assetPath];
       if (sourceMapPath) {
-        var destSourceMapPath = path.join(hashDir, path.basename(sourceMapPath)),
-            relativeSourceMapPath = stripPrefixAndNormalise(sourceMapPath, options.srcBasePath),
-            relativeDestSourceMapPath = stripPrefixAndNormalise(destSourceMapPath, options.destBasePath);
+        var destSourceMapPath = path.join(hashDir, path.basename(sourceMapPath));
+
+        if (options.hashType === 'file') {
+          var sourceMapExt = sourceMapExtname(sourceMapPath),
+              hashedSourceMapFilename = path.basename(sourceMapPath, sourceMapExt) + '.' + hexFolder + sourceMapExt;
+          destSourceMapPath = path.join(hashDir, hashedSourceMapFilename);
+        }
 
         grunt.file.copy(sourceMapPath, destSourceMapPath);
+
+        var relativeSourceMapPath = stripPrefixAndNormalise(sourceMapPath, options.srcBasePath),
+            relativeDestSourceMapPath = stripPrefixAndNormalise(destSourceMapPath, options.destBasePath);
         sourceFileMapping[relativeSourceMapPath] = relativeDestSourceMapPath;
         grunt.log.writeln('Copied source map: ' + destSourceMapPath);
       }
@@ -142,6 +151,10 @@ module.exports = function(grunt) {
     // Tests whether the filepath looks like a css or js source map.
     function isSourceMap(filepath) {
       return grunt.file.isMatch(['**/*.js.map', '**/*.css.map'], path.normalize(filepath));
+    }
+
+    function sourceMapExtname(filepath) {
+      return filepath.match(/(\.(js|css)\.map)$/)[1];
     }
 
     // Write the accompanying json file that maps non-hashed assets to their hashed locations.
