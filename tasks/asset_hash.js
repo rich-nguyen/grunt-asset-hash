@@ -113,6 +113,11 @@ module.exports = function(grunt) {
       var relativeDestPath = stripPrefixAndNormalise(destPath, options.destBasePath);
 
       grunt.file.copy(assetPath, destPath);
+
+      if (options.move && assetPath !== destPath) {
+        grunt.file.delete(assetPath);
+      }
+
       assetFileMapping[relativeAssetPath] = relativeDestPath;
       grunt.log.writeln('Copied asset: ' + assetPath + ' -> ' + destPath);
 
@@ -124,6 +129,11 @@ module.exports = function(grunt) {
             relativeDestSourceMapPath = stripPrefixAndNormalise(destSourceMapPath, options.destBasePath);
 
         grunt.file.copy(sourceMapPath, destSourceMapPath);
+
+        if (options.move && sourceMapPath !== destSourceMapPath) {
+          grunt.file.delete(sourceMapPath);
+        }
+
         sourceFileMapping[relativeSourceMapPath] = relativeDestSourceMapPath;
         grunt.log.writeln('Copied source map: ' + destSourceMapPath);
       }
