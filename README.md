@@ -26,6 +26,7 @@ In your project's Gruntfile, add a section named `asset_hash` to the data object
 grunt.initConfig({
   asset_hash: {
     options: {
+      move: false,                // Set to true to move instead of copy the source files
       preserveSourceMaps: false,  // Set to true when assets should share the same location as their source map.
       assetMap: 'assetmap.json',  // A mapping file between assets and their hashed locations. Set to `false` to skip generating.
       hashLength: 32,             // Number of hex characters in the hash folder. (0 means no hashing is done).
